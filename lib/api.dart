@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -11,10 +13,8 @@ class apiTest extends StatefulWidget {
 class _apiTestState extends State<apiTest> {
 
   final TextEditingController birthday = TextEditingController();
-  String bd = "";
-  var age;
-  var animal;
-  var constellation;
+
+   Map<String,dynamic>? map;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class _apiTestState extends State<apiTest> {
                 width: double.infinity,
                 color: Colors.blueGrey,
                 child: Text(
-                  age != null ? "年齢 :" + age.toString() : '',textAlign: TextAlign.center,style: TextStyle(color: Colors.lime),
+                  map != null ? "年齢 :" + map!["age"].toString() : '',textAlign: TextAlign.center,style: TextStyle(color: Colors.lime),
                 ),
               ),
               SizedBox(
@@ -52,7 +52,7 @@ class _apiTestState extends State<apiTest> {
                 width: double.infinity,
                 color: Colors.blueGrey,
                 child: Text(
-                  animal != null ? "生肖 :" + animal : '',textAlign: TextAlign.center,style: TextStyle(color: Colors.lime),
+                  map != null ? "生肖 :" + map!["animal"] : '',textAlign: TextAlign.center,style: TextStyle(color: Colors.lime),
                 ),
               ),
               SizedBox(
@@ -62,7 +62,7 @@ class _apiTestState extends State<apiTest> {
                 width: double.infinity,
                 color: Colors.blueGrey,
                 child: Text(
-                  constellation != null ? "星座 :" + constellation : '',textAlign: TextAlign.center,style: TextStyle(color: Colors.lime),
+                  map != null ? "星座 :" + map!["constellation"] : '',textAlign: TextAlign.center,style: TextStyle(color: Colors.lime),
                 ),
               ),
             ],
@@ -74,14 +74,13 @@ class _apiTestState extends State<apiTest> {
     var dio = Dio();
     String birthdayStr = birthday.text;
     print(birthdayStr);
-    var response = await dio.get("https://zj.v.api.aa1.cn/api/Age-calculation/",
+    final response = await dio.get("https://zj.v.api.aa1.cn/api/Age-calculation/",
         queryParameters: {"birthday" : birthdayStr});
-    Map<String,dynamic> map = response.data;
+    map = response.data;
     print(map);
+    // print(map);
     setState(() {
-      age = map["age"];
-      animal = map["animal"];
-      constellation = map["constellation"];
+      map;
     });
   }
 }
